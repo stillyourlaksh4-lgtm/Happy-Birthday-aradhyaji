@@ -10,6 +10,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
+        #fireworks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+        }
         body {
             margin: 0;
             overflow: hidden;
@@ -172,6 +181,7 @@
     <div id="app">
         <audio id="bg-music" src="love.mp3" loop></audio>
         <div id="canvas-container"></div>
+        <canvas id="fireworks"></canvas>
 
         <div id="progress-container">
             <div id="progress-bar"></div>
@@ -501,6 +511,56 @@ Waiting for reply..
         });
 
         // Initialize progress bar
+        // 🎆 Fireworks Animation
+const fireCanvas = document.getElementById("fireworks");
+const ctx = fireCanvas.getContext("2d");
+
+fireCanvas.width = window.innerWidth;
+fireCanvas.height = window.innerHeight;
+
+let particles = [];
+
+function createFirework(x, y) {
+    for (let i = 0; i < 80; i++) {
+        particles.push({
+            x: x,
+            y: y,
+            radius: Math.random() * 3 + 1,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+            speedX: (Math.random() - 0.5) * 6,
+            speedY: (Math.random() - 0.5) * 6,
+            life: 100
+        });
+    }
+}
+
+function animateFireworks() {
+    ctx.clearRect(0, 0, fireCanvas.width, fireCanvas.height);
+
+    particles.forEach((p, index) => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.life--;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        if (p.life <= 0) {
+            particles.splice(index, 1);
+        }
+    });
+
+    requestAnimationFrame(animateFireworks);
+}
+
+animateFireworks();
+
+// Click anywhere to create fireworks
+window.addEventListener("click", (e) => {
+    createFirework(e.clientX, e.clientY);
+});
         updateProgressBar();
     </script>
 </body>
