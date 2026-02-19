@@ -413,9 +413,19 @@ Waiting for reply..
 
         // Button event listeners
         document.getElementById('start-btn').addEventListener('click', () => {
-            currentStep = 2;
-            showStep(currentStep);
-        });
+    const music = document.getElementById("bg-music");
+
+    music.volume = 0;
+    music.play();
+
+    gsap.to(music, {
+        volume: 0.7,
+        duration: 3
+    });
+
+    currentStep = 2;
+    showStep(currentStep);
+});
 
         document.getElementById('next-btn-2').addEventListener('click', () => {
             currentStep = 3;
